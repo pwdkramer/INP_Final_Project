@@ -1,4 +1,5 @@
 # INP_Final_Project
+
 Internet Relay Chat implementation for PSU's CS594 - Internetworking Protocols
 
 Project Option 1: Internet Relay Chat
@@ -18,9 +19,9 @@ that the client and server will exchange in order to properly implement the IRC
 application. An example RFC that you may base your protocol specification on is the
 IRC RFC 1459
 
-# IRC Grading Sheet
+## IRC Grading Sheet
 
-| #  | Task Description                                                     | Max Points | Actual Points |
+| #  | Task Description                                                     | Max Points | Actual Points  |
 |----|----------------------------------------------------------------------|------------|----------------|
 | 1  | RFC Document                                                         | 20         |                |
 | 2  | Server Process                                                       | 3          |                |
