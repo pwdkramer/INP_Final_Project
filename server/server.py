@@ -1,5 +1,8 @@
 import socket
 import threading
+import signal
+
+shutting_down = False
 
 HOST = "0.0.0.0"
 PORT = 5000
@@ -7,6 +10,14 @@ PORT = 5000
 rooms = {}              # room_name -> set of client_ids
 client_ids = {}         # conn -> string client_id (e.g. "client0", "client1", etc.)
 next_client_id = 0
+
+def handle_signal(sig, frame):
+    global shutting_down
+    print("\n[!] Signal received, shutting down server...")
+    shutting_down = True
+
+signal.signal(signal.SIGINT, handle_signal)
+
 
 def parse_command(line):
     parts = line.split(" ", 1) # only split on the first space to separate command and arguments
@@ -234,13 +245,27 @@ def start_server():
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # Allow reuse of the address (avoid "Address already in use" error on restart)
         s.bind((HOST, PORT))
         s.listen()
+        s.settimeout(1.0) # Set a timeout for the accept() call to allow periodic shutdown checks
 
         print("[*] Server is running. Waiting for connections...")
 
         while True:
-            conn, addr = s.accept()
+            try:
+                conn, addr = s.accept()
+            except socket.timeout:
+                if shutting_down:
+                    break
+                continue
+
             thread = threading.Thread(target=handle_client, args=(conn, addr), daemon=True) # Create a new thread to handle the client connection (daemon=True means it will exit when the main thread exits)
             thread.start()
+
+        for conn in list(client_ids.keys()):
+            try:
+                conn.sendall(b"NOTICE SERVER_SHUTDOWN\r\n")
+            except:
+                pass
+            conn.close()
 
 
 if __name__ == "__main__":

@@ -4,17 +4,21 @@ import threading
 HOST = "127.0.0.1"
 PORT = 5000
 
+connected = True
+
 def listen_to_server(sock):
     """Background thread: receives messages from the server."""
+    global connected
     try:
         while True:
             data = sock.recv(1024)
             if not data:
                 print("Disconnected from server.")
+                connected = False
                 break
             print(data.decode().strip())
-    except Exception as e:
-        print(f"[!] Error receiving data: {e}")
+    except:
+        connected = False
     finally:
         sock.close()
 
@@ -30,10 +34,14 @@ def main():
 
     # Main loop: send user input to server
     try:
-        while True:
+        while connected:
             msg = input()
             if not msg:
                 continue
+
+            if not connected:
+                print("Not connected to server. Exiting.")
+                break
 
             sock.sendall((msg + "\r\n").encode())
 
