@@ -79,7 +79,7 @@ def handle_create(args, conn):
     conn.sendall(f"OK ROOM_CREATED {room}\r\n".encode())
 
 
-def handle_join(args, conn, addr):
+def handle_join(args, conn):
     room = args.strip()
     if not room:
         conn.sendall(b"ERR_INVALID_ARGS\r\n")
@@ -107,7 +107,7 @@ def handle_join(args, conn, addr):
                 cleanup_client(member)
 
 
-def handle_leave(args, conn, addr):
+def handle_leave(args, conn):
     room = args.strip()
     if not room:
         conn.sendall(b"ERR_INVALID_ARGS\r\n")
@@ -151,7 +151,7 @@ def handle_members(args, conn):
     conn.sendall(response.encode())
 
 
-def handle_send(args, conn, addr):
+def handle_send(args, conn):
     parts = args.split(" ", 1) # split into room and message (only on the first space)
 
     if len(parts) < 2:
