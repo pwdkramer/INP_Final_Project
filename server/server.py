@@ -49,11 +49,11 @@ def handle_command(command, args, conn, addr):
         
     elif command == "SEND":
         # Handle SEND command
-        handle_send(args, conn, addr)
+        handle_send(args, conn)
         
     elif command == "QUIT":
         # Handle QUIT command
-        handle_quit(conn, addr)
+        handle_quit(conn)
 
     else:
         conn.sendall(b"ERR_UNKNOWN_COMMAND\r\n")
