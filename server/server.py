@@ -37,12 +37,12 @@ def handle_command(command, args, conn, addr):
         
     elif command == "JOIN":
         # Handle JOIN command
-        handle_join(args, conn, addr)
+        handle_join(args, conn)
 
     elif command == "LEAVE":
         # Handle LEAVE command
-        handle_leave(args, conn, addr)
-        
+        handle_leave(args, conn)
+
     elif command == "MEMBERS":
         # Handle MEMBERS command
         handle_members(args, conn)
