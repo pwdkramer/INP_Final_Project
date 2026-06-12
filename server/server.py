@@ -198,7 +198,7 @@ def cleanup_client(conn):
     if conn in client_ids:
         del client_ids[conn]
 
-def handle_quit(conn, addr):
+def handle_quit(conn):
     conn.sendall(b"OK QUIT\r\n")
     cleanup_client(conn)
     conn.close()
